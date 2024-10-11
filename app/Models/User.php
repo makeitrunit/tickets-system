@@ -32,6 +32,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public static function createFromEmail($email)
+    {
+        return self::create([
+            'name' => '123',
+            'email' => $email,
+            'password' => bcrypt('123'),
+        ]);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -43,5 +52,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function scopeByEmail($query,$email)
+    {
+        return $query->where('email', '=', $email);
     }
 }

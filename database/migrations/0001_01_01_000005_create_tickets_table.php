@@ -12,7 +12,7 @@ class CreateTicketsTable extends Migration
             $table->id()->autoIncrement()->unique();
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->integer('code');
-            $table->binary('status')->default(0);
+            $table->foreignId('purchase_id')->constrained();
             $table->timestamps();
         });
     }
