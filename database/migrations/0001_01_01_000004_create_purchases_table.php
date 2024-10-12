@@ -14,6 +14,7 @@ class CreatePurchasesTable extends Migration
             $table->foreignId('event_id')->constrained()->onDelete('restrict');
             $table->integer('qty');
             $table->tinyInteger('status')->default(0);
+            $table->text('qr')->nullable();
             $table->timestamps();
         });
     }

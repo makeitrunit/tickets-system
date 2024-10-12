@@ -7,12 +7,12 @@ use App\Models\Event;
 
 class PurchaseTicketRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'event_id' => 'required|exists:events,id',
@@ -21,14 +21,14 @@ class PurchaseTicketRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->merge([
             'email' => trim($this->email),
         ]);
     }
 
-    public function withValidator($validator)
+    public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
             $eventId = $this->input('event_id');

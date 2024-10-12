@@ -3,9 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Hash;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Str;
 
 class User extends Authenticatable
 {
@@ -32,12 +34,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public static function createFromEmail($email)
+    public static function createFromEmail($email): User
     {
         return self::create([
-            'name' => '123',
+            'name' => $email,
             'email' => $email,
-            'password' => bcrypt('123'),
+            'password' => Hash::make(Str::random(10)),
         ]);
     }
 

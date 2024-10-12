@@ -13,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PurchaseTicketJob implements ShouldQueue
 {
@@ -30,7 +31,7 @@ class PurchaseTicketJob implements ShouldQueue
         try {
             $purchase = Purchase::findOrFail($this->purchaseId);
 
-            DB::transaction(function () use ($purchase) {
+            DB::transaction(static function () use ($purchase) {
                 $event = Event::findOrFail($purchase->event_id);
 
                 if ($event->available_qty < $purchase->qty) {
@@ -46,12 +47,13 @@ class PurchaseTicketJob implements ShouldQueue
                 }
 
                 $event->decrement('available_qty', $purchase->qty);
-
                 $purchase->status = 1;
+                $purchase->qr = QrCode::size(300)->generate(route('purchase.status', ['purchaseId' => $purchase->id]));
                 $purchase->save();
             });
-            event(new TicketPurchased($purchase));
+            event(new TicketPurchased($this->purchaseId, 'completed'));
         } catch (\Exception $exception) {
+            event(new TicketPurchased($this->purchaseId, 'failed'));
             $purchase->status = 3;
             $purchase->save();
             DB::rollBack();

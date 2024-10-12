@@ -40,14 +40,12 @@
                     </div>
                     <div class="flex items-center justify-between">
                         @if($event->available_qty > 0)
-
                             <button type="submit"
                                     class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                                 Comprar Ahora
                             </button>
-
                         @else
-                            Sin existencias
+                            <span class="inline-flex items-center rounded-md bg-indigo-50 px-5 py-4 text-xs font-medium text-pink-700 ring-1 ring-inset ring-pink-700/10">Sin existencias</span>
                         @endif
                     </div>
                 </form>

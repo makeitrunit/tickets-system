@@ -8,12 +8,26 @@ use App\Jobs\PurchaseTicketJob;
 use App\Models\Event;
 use App\Models\Purchase;
 use App\Models\User;
+use App\Services\PurchaseTicketService;
+use App\Services\UserService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use SimpleSoftwareIO\QrCode\QrCodeServiceProvider;
 
 class EventsController extends Controller
 {
+    private UserService $userService;
+    private PurchaseTicketService $ticketService;
+
+    public function __construct()
+    {
+        $this->userService = new UserService();
+        $this->ticketService = new PurchaseTicketService();
+    }
+
     public function list(): View
     {
         $events = Event::upcoming()->get();
@@ -25,21 +39,18 @@ class EventsController extends Controller
         return view('show', ['event' => $event]);
     }
 
-    public function purchase(PurchaseTicketRequest $request)
+    public function purchase(PurchaseTicketRequest $request): RedirectResponse
     {
-        $user = User::byEmail($request['email'])->first();
-
+        $email = $request['email'];
+        $user = $this->userService->getUserForPurchaseByEmail($email);
         if (!$user) {
-            $user = User::createFromEmail($request['email']);
+            throw ValidationException::withMessages(['field_name' => 'No se pudo obtener el usuario para realizar la compra']);
         }
 
-        $purchase = Purchase::create([
-            'user_id' => $user->id,
-            'event_id' => $request['event_id'],
-            'qty' => $request['qty'],
-        ]);
-        PurchaseTicketJob::dispatch($purchase->id);
-        event(new TicketPurchased($purchase->id));
+        $purchase = $this->ticketService->purchaseTicket($user, $request['event_id'], $request['qty']);
+        if (!$purchase) {
+            throw ValidationException::withMessages(['field_name' => 'No se pudo generar la compra']);
+        }
         return redirect()->route('purchase.status', ['purchaseId' => $purchase->id]);
     }
 

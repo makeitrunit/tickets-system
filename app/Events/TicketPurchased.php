@@ -10,13 +10,16 @@ class TicketPurchased
     use Dispatchable;
     public $purchaseId;
 
-    public function __construct($purchaseId)
+    public $purchaseStatus;
+
+    public function __construct($purchaseId, $purchaseStatus = 'processing')
     {
         $this->purchaseId = $purchaseId;
+        $this->purchaseStatus = $purchaseStatus;
     }
 
     public function broadcastOn()
     {
-        return new Channel('ticket-purchase.' . $this->purchaseId);
+        return new Channel('ticket-purchase.' . $this->purchaseId . '.' . $this->purchaseStatus);
     }
 }
