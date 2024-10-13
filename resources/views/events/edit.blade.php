@@ -7,7 +7,6 @@
     <section class="mt-6 p-4">
         <div class="flex justify-center ">
             <div class="w-full max-w-md">
-
                 <form method="post" action="{{ route('events.update', $event) }}" class="space-y-6 w-1/2">
                     @csrf
                     @method('patch')
@@ -20,10 +19,17 @@
                     </div>
 
                     <div>
-                        <x-input-label for="qty" :value="__('Name')"/>
+                        <x-input-label for="qty" :value="__('Cantidad')"/>
                         <x-text-input id="qty" name="qty" type="text" class="mt-1 block w-full"
                                       :value="old('qty', $event->qty)" required autofocus autocomplete="qty"/>
                         <x-input-error class="mt-2" :messages="$errors->get('qty')"/>
+                    </div>
+
+                    <div>
+                        <x-input-label for="available_qty" :value="__('Cantidad disponible')"/>
+                        <x-text-input id="available_qty" name="available_qty" type="text" class="mt-1 block w-full"
+                                      :value="old('available_qty', $event->available_qty)" required autofocus autocomplete="available_qty"/>
+                        <x-input-error class="mt-2" :messages="$errors->get('available_qty')"/>
                     </div>
 
                     <div>

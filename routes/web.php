@@ -23,11 +23,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], st
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('events', App\Http\Controllers\Admin\EventsController::class)->names([
-
-        'update' => 'events.update',
-
-    ]);
+    Route::resource('events', App\Http\Controllers\Admin\EventsController::class);
 });
 
 

@@ -18,7 +18,7 @@ class EventUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'qty' => ['required', 'integer', 'min:1'],
-            'available_qty' => ['required', 'integer', 'min:1', 'greater_or_equal:qty'],
+            'available_qty' => ['required', 'integer', 'min:1', 'gte:qty'],
             'status' => ['boolean'],
             'date_from' => ['required', 'date_format:Y-m-d\TH:i', 'after_or_equal:today'],
             'date_until' => ['required', 'date_format:Y-m-d\TH:i', 'after:date_from'],
