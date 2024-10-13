@@ -73,25 +73,5 @@ class EventsController extends Controller
         return view('show', ['event' => $event]);
     }
 
-    public function purchase(PurchaseTicketRequest $request): RedirectResponse
-    {
-        $email = $request['email'];
-        $user = $this->userService->getUserForPurchaseByEmail($email);
-        if (!$user) {
-            throw ValidationException::withMessages(['field_name' => 'No se pudo obtener el usuario para realizar la compra']);
-        }
 
-        $purchase = $this->ticketService->purchaseTicket($user, $request['event_id'], $request['qty']);
-        if (!$purchase) {
-            throw ValidationException::withMessages(['field_name' => 'No se pudo generar la compra']);
-        }
-        return redirect()->route('purchase.status', ['purchaseId' => $purchase->id]);
-    }
-
-    public function status(Request $request): View
-    {
-        $purchaseId = $request->query('purchaseId');
-        $purchase = Purchase::with('tickets')->findOrFail($purchaseId);
-        return view('status', ['purchase' => $purchase]);
-    }
 }

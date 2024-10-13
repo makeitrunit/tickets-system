@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('qty');
             $table->integer('available_qty');
             $table->integer('version');
-            $table->datetime('from');
-            $table->datetime('until')->nullable();
+            $table->datetime('date_from');
+            $table->datetime('date_until')->nullable();
             $table->timestamps();
         });
 
@@ -33,8 +33,8 @@ return new class extends Migration
                     'qty' => 10,
                     'available_qty' => 10,
                     'version' => 0,
-                    'from' => Carbon::create(2024,10,10),
-                    'until' => Carbon::create(2024,10,23),
+                    'date_from' => Carbon::create(2024,10,10),
+                    'date_until' => Carbon::create(2024,10,23),
                 ]
             )
         );

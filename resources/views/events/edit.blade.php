@@ -22,8 +22,36 @@
                     <div>
                         <x-input-label for="qty" :value="__('Name')"/>
                         <x-text-input id="qty" name="qty" type="text" class="mt-1 block w-full"
-                                      :value="old('name', $event->qty)" required autofocus autocomplete="qty"/>
+                                      :value="old('qty', $event->qty)" required autofocus autocomplete="qty"/>
                         <x-input-error class="mt-2" :messages="$errors->get('qty')"/>
+                    </div>
+
+                    <div>
+                        <x-input-label for="date_from" :value="__('From')"/>
+                        <x-text-input
+                            id="date_from"
+                            name="date_from"
+                            type="datetime-local"
+                            class="mt-1 block w-full"
+                            :value="old('date_from', $event->date_from ? \Carbon\Carbon::parse($event->date_from)->format('Y-m-d\TH:i') : '')"
+                            required
+                            autofocus
+                        />
+                        <x-input-error class="mt-2" :messages="$errors->get('date_from')"/>
+                    </div>
+
+                    <div>
+                        <x-input-label for="date_until" :value="__('Until')"/>
+                        <x-text-input
+                            id="date_until"
+                            name="date_until"
+                            type="datetime-local"
+                            class="mt-1 block w-full"
+                            :value="old('date_until', $event->date_until ? \Carbon\Carbon::parse($event->date_until)->format('Y-m-d\TH:i') : '')"
+                            required
+                            autofocus
+                        />
+                        <x-input-error class="mt-2" :messages="$errors->get('date_until')"/>
                     </div>
 
                     <div class="flex items-center gap-4">
