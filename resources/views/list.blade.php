@@ -1,14 +1,18 @@
-@extends('layout')
 
-@section('title', 'Página Principal')
-@section('content')
-    <main class="flex-grow container mx-auto px-4 py-8">
+
+
+    <x-app-layout>
+        <x-slot name="header">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Eventos') }}
+            </h2>
+        </x-slot>
         <h1 class="text-3xl font-bold text-center mb-8">Eventos</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($events as $event)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <img src="https://placehold.co/600x400"
-                         alt="Evento {{ $event->name  }}"
+                         alt="Evento {{ $event->name }}"
                          class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h2 class="text-xl font-semibold mb-2">{{ $event->name }}</h2>
@@ -27,7 +31,6 @@
                     </div>
                 </div>
             @endforeach
-
         </div>
-    </main>
-@endsection
+    </x-app-layout>
+

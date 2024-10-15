@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ['name', 'description', 'qty', 'available_qty', 'version', 'date_from', 'date_until'];
+    protected $fillable = ['name', 'description', 'qty', 'available_qty', 'date_from', 'date_until'];
 
     public function scopeUpcoming($query, $date = null)
     {

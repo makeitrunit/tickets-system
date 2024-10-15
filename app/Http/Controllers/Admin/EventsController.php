@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\TicketPurchased;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EventDeleteRequest;
+use App\Http\Requests\EventStoreRequest;
 use App\Http\Requests\EventUpdateRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\PurchaseTicketRequest;
@@ -23,13 +25,9 @@ use SimpleSoftwareIO\QrCode\QrCodeServiceProvider;
 
 class EventsController extends Controller
 {
-    private UserService $userService;
-    private PurchaseTicketService $ticketService;
 
     public function __construct()
     {
-        $this->userService = new UserService();
-        $this->ticketService = new PurchaseTicketService();
     }
 
     public function index(Request $request): View
@@ -50,6 +48,21 @@ class EventsController extends Controller
         return view('events.list', compact('events'));
     }
 
+    public function create(): View
+    {
+        return view('events.show');
+    }
+
+    public function store(EventStoreRequest $request): RedirectResponse
+    {
+        $event = new Event();
+
+        $event->fill($request->validated());
+        $event->save();
+
+        return Redirect::route('events.create', $event->id)->with('status', 'event-created');
+    }
+
     public function edit(Event $event): View
     {
         return view('events.edit', [
@@ -68,10 +81,29 @@ class EventsController extends Controller
         return Redirect::route('events.edit', $event->id)->with('status', 'event-updated');
     }
 
+    public function destroy(EventDeleteRequest $event): RedirectResponse
+    {
+        Event::destroy($event);
+        return Redirect::back()->with('status', 'event-deleted');
+    }
+
     public function show(Event $event): View
     {
         return view('show', ['event' => $event]);
     }
 
+    public function purchases(Request $request): View
+    {
+        $query = Purchase::query();
+        $events = Event::all();
 
+        if ($request->filled('event_id')) {
+            $query->whereHas('event', function ($q) use ($request) {
+                $q->where('event_id', $request->get('event_id'));
+            });
+        }
+
+        $purchases = $query->paginate(10);
+        return view('purchases.list', ['purchases' => $purchases, 'events' => $events]);
+    }
 }

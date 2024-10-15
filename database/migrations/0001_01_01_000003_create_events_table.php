@@ -19,7 +19,6 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->integer('qty');
             $table->integer('available_qty');
-            $table->integer('version');
             $table->datetime('date_from');
             $table->datetime('date_until')->nullable();
             $table->timestamps();
@@ -32,7 +31,6 @@ return new class extends Migration
                     'description' => 'Test Event Description',
                     'qty' => 10,
                     'available_qty' => 10,
-                    'version' => 0,
                     'date_from' => Carbon::create(2024,10,10),
                     'date_until' => Carbon::create(2024,10,23),
                 ]
